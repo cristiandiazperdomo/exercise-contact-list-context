@@ -1,15 +1,19 @@
-import React, { useState, useRef, useContext } from "react";
+import React, { useState, useRef, useEffect, useContext } from "react";
 import { Context } from "../store/appContext";
 import { Link } from "react-router-dom";
 
-export const AddContact = () => {
+export const EditContact = () => {
 	const { store, actions } = useContext(Context);
-	const [inputValue, setInputValue] = useState();
+	//const [contactInfo, setContactInfo] = useState([]);
+	const [inputValue, setInputValue] = useState("");
+	const [userIdToEdit, setUserIdToEdit] = useState(0);
 
 	const fullName = useRef();
 	const email = useRef();
 	const address = useRef();
 	const phone = useRef();
+
+	const data = window.location; // GET URL
 
 	const handleForm = e => {
 		e.preventDefault();
@@ -22,8 +26,20 @@ export const AddContact = () => {
 			phone: phone.current.value
 		};
 
-		actions.setInfo(newContact);
+		actions.editContact(userIdToEdit, newContact);
 	};
+
+	/*const getUser = async id => {
+		const data = await actions.getOneParticular(id);
+		setContactInfo(data);
+		console.log(data);
+	};*/
+
+	useEffect(() => {
+		const id = data.pathname.slice(6, data.pathname.length);
+		setUserIdToEdit(id);
+		// getUser(id);
+	}, []);
 
 	return (
 		<div className="container">
